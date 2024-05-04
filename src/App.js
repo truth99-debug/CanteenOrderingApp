@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { fadeInOut } from "./animations";
 import { getAllCartItems, validateUserJWTToken } from "./api";
-import { Alert, MainLoader, CheckOutSuccess, UsersOrder, Menu } from "./components";
+import { Alert, MainLoader, CheckOutSuccess, UsersOrder, Menu  } from "./components";
 import { app } from "./config/firebase.config";
 import { Dashboard, Login, Main } from "./containers";
 import { setCartItems } from "./context/actions/cartAction";
 import { setUserDetails } from "./context/actions/userActions";
+
 
 const App = () => {
   const firebaseAuth = getAuth(app);

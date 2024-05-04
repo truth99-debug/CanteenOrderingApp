@@ -16,18 +16,23 @@ import { setCartOff } from "../context/actions/displayCartAction";
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const [carts , setCarts] = useState([]);
   const user = useSelector((state) => state.user);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     let tot = 0;
+    console.log("cart" , cart)
+    console.log("user" , user)
     if (cart) {
-      cart.map((data) => {
-        tot = tot + data.product_price * data.quantity;
+      carts.push(cart)
+      carts.map((data) => {
+        console.log("carts data" , data)
+        tot = tot + data.price * data.length;
         setTotal(tot);
       });
     }
-  }, [cart]);
+  },[total]);
 
   const handleCheckOut = () => {
     const data = {
@@ -65,12 +70,12 @@ const Cart = () => {
       </div>
 
       <div className="flex-1 flex flex-col items-start justify-start rounded-t-3xl bg-zinc-900 h-full py-6  gap-3 relative">
-        {cart && cart?.length > 0 ? (
+        {carts && carts?.length > 0 ? (
           <>
             <div className="flex flex-col w-full items-start justify-start gap-3 h-[65%] overflow-y-scroll scrollbar-none px-4">
-              {cart &&
-                cart?.length > 0 &&
-                cart?.map((item, i) => (
+              {carts &&
+                carts?.length > 0 &&
+                carts?.map((item, i) => (
                   <CartItemCard key={i} index={i} data={item} />
                 ))}
             </div>
@@ -103,35 +108,35 @@ const Cart = () => {
 };
 
 export const CartItemCard = ({ index, data }) => {
-  const cart = useSelector((state) => state.cart);
-  const user = useSelector((state) => state.user);
+  // const cart = useSelector((state) => state.cart);
+  // const user = useSelector((state) => state.user);
   const [itemTotal, setItemTotal] = useState(0);
   const dispatch = useDispatch();
 
   const decrementCart = (productId) => {
     dispatch(alertSuccess("Updated the cartitem"));
 
-    increaseItemQuantity(user?.user_id, productId, "decrement").then((data) => {
-      getAllCartItems(user?.user_id).then((items) => {
-        dispatch(setCartItems(items));
-        dispatch(alertNULL());
-      });
-    });
+    //increaseItemQuantity(user?.user_id, productId, "decrement").then((data) => {
+      //getAllCartItems(user?.user_id).then((items) => {
+       // dispatch(setCartItems(items));
+        //dispatch(alertNULL());
+      //});
+   // });
   };
 
   const incrementCart = (productId) => {
     dispatch(alertSuccess("Updated the cartitem"));
-    increaseItemQuantity(user?.user_id, productId, "increment").then((data) => {
-      getAllCartItems(user?.user_id).then((items) => {
-        dispatch(setCartItems(items));
-        dispatch(alertNULL());
-      });
-    });
+    //increaseItemQuantity(user?.user_id, productId, "increment").then((data) => {
+      //getAllCartItems(user?.user_id).then((items) => {
+       // dispatch(setCartItems(items));
+       // dispatch(alertNULL());
+     // });
+   // });
   };
 
   useEffect(() => {
     setItemTotal(data.product_price * data.quantity);
-  }, [itemTotal, cart]);
+  }, [itemTotal]);
 
   return (
     <motion.div
@@ -147,9 +152,9 @@ export const CartItemCard = ({ index, data }) => {
 
       <div className="flex items-center justify-start gap-1 w-full">
         <p className="text-lg text-primary font-semibold">
-          {data?.product_name}
+          {data?.name}
           <span className="text-sm block capitalize text-gray-400">
-            {data?.product_category}
+            {data?.category}
           </span>
         </p>
         <p className="text-sm flex items-center justify-center gap-1 font-semibold text-green-400 ml-auto">
@@ -160,7 +165,7 @@ export const CartItemCard = ({ index, data }) => {
       <div className="ml-auto flex items-center justify-center gap-3">
         <motion.div
           {...buttonClcik}
-          onClick={() => decrementCart(data?.productId)}
+          onClick={() => decrementCart(data?.id)}
           className="w-8 h-8 flex items-center justify-center rounded-md drop-shadow-md bg-zinc-900 cursor-pointer"
         >
           <p className="text-xl font-semibold text-primary">--</p>
@@ -169,7 +174,7 @@ export const CartItemCard = ({ index, data }) => {
         <motion.div
           {...buttonClcik}
           className="w-8 h-8 flex items-center justify-center rounded-md drop-shadow-md bg-zinc-900 cursor-pointer"
-          onClick={() => incrementCart(data?.productId)}
+          onClick={() => incrementCart(data?.id)}
         >
           <p className="text-xl font-semibold text-primary">+</p>
         </motion.div>

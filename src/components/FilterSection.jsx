@@ -12,18 +12,20 @@ const FilterSection = () => {
   const [category, setCategory] = useState("salads");
   const [products, setProducts] = useState([]);
  
-
   useEffect(() => {
-    const fetchData = async (selectedCategory) => {
+    const fetchData = async () => {
+      console.log(category)
       try {
-        const data = await addNewProduct( selectedCategory);
+        const baseURL = "http://localhost:8080/api";
+        const response = await axios.post(`${baseURL}/mealitems/getByCategory`, { category: category });
+        const productsData = response.data;
         console.log("Data from API:", category);
-        setProducts(data);
+        setProducts(productsData);
       } catch (error) {
         console.log("Error fetching data:", error);
       }
     };
-    fetchData();
+    fetchData(); 
   }, [category]);
 
   return (
@@ -51,36 +53,30 @@ const FilterSection = () => {
 
       <div className=" w-full flex items-center justify-evenly flex-wrap gap-4 mt-12 ">
         {products &&
-          products
-            .filter((data) => data.product_category === category)
-            .map((data, i) => <SliderCard key={i} data={data} index={i} />)}
+          products.map((data, i) => <SliderCard key={i} data={data} index={i} />)}
       </div>
     </motion.div>
   );
 };
 
 export const FilterCard = ({ data, index, category, setCategory, setProducts  }) => {
- 
-  const baseURL =
-  "http://localhost:8080/api";
 
-  const handleCategoryChange = async () => {
+
+  const handleCategoryChange = async (selectedCategory) => {
     try {
-      const response = await axios.post(`${baseURL}/mealitems/getByCategory`, { category: data.category });
-      const productsData = response.data.data;
-      if (productsData) {
-        setProducts(productsData);
-      }
+      console.log(selectedCategory)
+      setCategory(selectedCategory);
     } catch (err) {
       console.error(err);
     }
   };
+  
 
   return (
     <motion.div
       key={index}
       {...staggerFadeInOut(index)}
-      onClick={handleCategoryChange}
+      onClick={() => {handleCategoryChange(data.category)}}
       className={`group w-28 min-w-[128px] cursor-pointer rounded-md  py-6 ${
         category === data.category ? "bg-green-500" : "bg-primary"
       } hover:bg-green-500 shadow-md flex flex-col items-center justify-center gap-4`}

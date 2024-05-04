@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Avatar, logo1 } from "../assets";
 import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
@@ -10,6 +10,8 @@ import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { setUserNull } from "../context/actions/userActions";
 import { setCartOn } from "../context/actions/displayCartAction";
+
+
 
 const Header = () => {
   const user = useSelector((state) => state.user);
