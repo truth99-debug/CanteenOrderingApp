@@ -21,6 +21,11 @@ const FilterSection = () => {
         const productsData = response.data;
         console.log("Data from API:", category);
         setProducts(productsData);
+       
+        // Assuming you have an endpoint to fetch image URLs
+      const imageResponse = await axios.get(`http://localhost:8089/api/v1/admin/names/2`);
+
+
       } catch (error) {
         console.log("Error fetching data:", error);
       }

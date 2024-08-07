@@ -19,3 +19,4 @@ export { default as burger2 } from "./img/burger2.jpg";
 export { default as stewandrice } from "./img/stewandrice.jpg";
 export { default as wrapss } from "./img/wrapss.jpg";
 export { default as img1 } from "./img/img1.webp";
+export { default as homeimg } from "./img/homeimg.png";

@@ -1,59 +1,115 @@
-import { Button } from "@mui/material/Button";
-import { Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import React, { useState } from "react";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Image from "react-bootstrap/Image";
 
-const saveImageToDb = () => {
+// import your default Image
+import adImage from "./../../../../assets/images/advertiser/41CKlQ1b08S.jpg";
 
-    const [selectedImage, setSelectedImage] = useState()
-    const [imageByteArray, setImageByteArray] = useState()
-    const [imageName, setImageName] = useState()
-    const [imageSize, setImageSize] = useState()
+const SubmitImageToDb = () => {
+  // Ad Image useState
+  const [selectedFoodImages, setSelectedFoodImages] = useState([]);
+  const [previewImage, setPreviewImage] = useState(adImage); // Default Image
 
+  // Ad Image Input Error useState
+  const [AdImageInputErr, setAdImageInputErr] = useState(false); // Initialize with false
 
-const handleSelectedImage = (event) => {
-    const file = event.target.files[0];
-    if(file.name.endsWith('png') || file.name.endsWith('jpeg') || file.name.endsWith('webp'))
-        setSelectedImage(file);
-        setImageName(file.name)
-    setImageSize(file.size)
-}
-
-const changeImageToByteArray = () => {
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(selectedImage);
-        if(e.target.readyState === FileReader.DONE ) {
-            const arrayBuffer = e.target.result,
-                array = new Uint8Array(ArrayBuffer);
-            for (const a of array ) {
-                imageByteArray.push(a);
-            }
-            setImageByteArray(imageByteArray)
-        }
+  // Function to preview the selected ad image
+  const PreviewAdImage = (selectedImages) => {
+    if (selectedImages.length === 0) {
+      setPreviewImage(adImage); // Set to adImage when no images are selected
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreviewImage(reader.result);
+      };
+      // after read this file above onload fun run
+      reader.readAsDataURL(selectedImages[0]);
     }
+  };
 
-    useEffect (() => {
-        if (selectedImage) {
-            changeImageToByteArray();
-        }
-    }, [selectedImage]);
+  const handleAdimages = (event) => {
+    const selectedImages = Array.from(event.target.files);
+    setAdImageInputErr(false);
+    if (selectedFoodImages.length + selectedImages.length <= 3) {
+      // combined already selected and newly selected Images
+      setSelectedFoodImages((prevSelectedAdImages) => [
+        ...prevSelectedAdImages,
+        ...selectedImages,
+      ]);
 
-    const saveImageToDb = (e) => {
-        const data = {
-            imageName: imageName,
-            imageContents: imageByteArray,
-            fileSize: imageSize
-        }
-        service.submitImageToDb(data).then((response) => {
-            if (response.ok) {
-                console.log('image successfully saved');
-            }
-        }).catch((error) => {
-            console.log('could not save the image');
-        })
-        
+      PreviewAdImage([...selectedFoodImages, ...selectedImages]);
+    } else {
+      alert("You can only select up to 3 files.");
     }
-}
+  };
 
+  const handleRemoveAdImages = (index) => {
+    const updatedAdImages = selectedFoodImages.filter((_, i) => i !== index);
+    setSelectedFoodImages(updatedAdImages);
+    PreviewAdImage(updatedAdImages);
+  };
 
+  // Add a handleSubmit function if needed
 
+  return (
+    <Container>
+      <h2>Create Your Ad</h2>
+      <Row className="d-flex justify-content-center">
+        <Image src={previewImage} fluid alt="Item" />
+      </Row>
+      <Row>
+        <Col className="AdsHome-right-cont">
+          <Form>
+            <fieldset>
+              <div className="mb-3">
+                <p className="mb-0">
+                  Upload Item Images (Maximum 3 Images){" "}
+                  <sup>
+                    <i className="fa-solid fa-asterisk fa-sm AdAstric"></i>
+                  </sup>
+                </p>
+                <input
+                  type="file"
+                  onChange={handleAdimages}
+                  multiple
+                  accept=".jpg, .jpeg, .png"
+                  className="BrowseImageInput form-control"
+                />
+                {AdImageInputErr && (
+                  <p className="px-3 text-danger">
+                    Please select one or more files.
+                  </p>
+                )}
+                {selectedFoodImages.length > 0 && (
+                  <div className="p-3 d-flex gap-3">
+                    <p>Selected Files:</p>
+                    <ul>
+                      {selectedFoodImages.map((file, index) => (
+                        <div
+                          className="d-flex align-items-center justify-content-between gap-3"
+                          key={index} // Moved key to the outer element
+                        >
+                          <li>{file.name}</li>
+                          <i
+                            className="fa-solid fa-trash fa-lg AddeleteImg"
+                            onClick={() => handleRemoveAdImages(index)}
+                          ></i>
+                        </div>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+              {/* Add your Submit button */}
+            </fieldset>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default SubmitImageToDb;

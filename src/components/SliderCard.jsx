@@ -7,6 +7,9 @@ import {  IoBasket } from "../assets/icons";
 import { alertNULL, alertSuccess } from "../context/actions/alertActions";
 import { setCartItems } from "../context/actions/cartAction";
 import { HiCurrencyRupee  } from "react-icons/hi2";
+import { MdMoney } from 'react-icons/md';
+
+
 
 const SliderCard = ({ data, index }) => {
   const user = useSelector((state) => state.user);
@@ -15,7 +18,7 @@ const SliderCard = ({ data, index }) => {
 
   const sendToCart = (data) => {
     console.log(" sendToCart cart data" , data)
-    dispatch(alertSuccess("Added to the cart"));
+    //dispatch(alertSuccess("Added to the cart"));
     dispatch(setCartItems(data));
   };
 
@@ -31,9 +34,9 @@ const SliderCard = ({ data, index }) => {
         <p className="text-xl text-headingColor font-semibold">
           {data.name}
         </p>
+       
         <p className="text-lg font-semibold text-green-500 flex items-center justify-center gap-1">
-          <HiCurrencyRupee className="text-green-500" />{" "}
-          {parseFloat(data.price).toFixed(2)}
+          {"R"}{parseFloat(data.price).toFixed(2)}
         </p>
 
         <motion.div

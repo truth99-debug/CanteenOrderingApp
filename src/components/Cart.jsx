@@ -1,17 +1,18 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { buttonClcik, slideIn, staggerFadeInOut } from "../animations";
 import { baseURL, getAllCartItems, increaseItemQuantity } from "../api";
 import {
   BiChevronsRight,
   FcClearFilters,
-  HiCurrencyRupee,
 } from "../assets/icons";
 import { alertNULL, alertSuccess } from "../context/actions/alertActions";
 import { setCartItems } from "../context/actions/cartAction";
 import { setCartOff } from "../context/actions/displayCartAction";
+
+
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -24,15 +25,19 @@ const Cart = () => {
     let tot = 0;
     console.log("cart" , cart)
     console.log("user" , user)
-    if (cart) {
+
+    const cartItemExists = carts.some(item => item.id === cart.id);
+    
+    if (!cartItemExists && cart) {
       carts.push(cart)
-      carts.map((data) => {
-        console.log("carts data" , data)
-        tot = tot + data.price * data.length;
-        setTotal(tot);
+      carts.forEach((data) => {
+        console.log("carts data", data);
+        tot += parseFloat(data.price) * parseInt(data.quantity); 
       });
+      setTotal(tot);
     }
-  },[total]);
+  },[cart, user]); 
+  
 
   const handleCheckOut = () => {
     const data = {
@@ -83,7 +88,7 @@ const Cart = () => {
               <div className="w-full flex items-center justify-evenly">
                 <p className="text-3xl text-zinc-500 font-semibold">Total</p>
                 <p className="text-3xl text-green-500 font-semibold flex items-center justify-center gap-1">
-                  <HiCurrencyRupee className="text-primary" />
+                  {"R"}
                   {total}
                 </p>
               </div>
@@ -114,7 +119,7 @@ export const CartItemCard = ({ index, data }) => {
   const dispatch = useDispatch();
 
   const decrementCart = (productId) => {
-    dispatch(alertSuccess("Updated the cartitem"));
+    dispatch(alertSuccess("Updated the cart item"));
 
     //increaseItemQuantity(user?.user_id, productId, "decrement").then((data) => {
       //getAllCartItems(user?.user_id).then((items) => {
@@ -125,7 +130,7 @@ export const CartItemCard = ({ index, data }) => {
   };
 
   const incrementCart = (productId) => {
-    dispatch(alertSuccess("Updated the cartitem"));
+    dispatch(alertSuccess("Updated the cart item"));
     //increaseItemQuantity(user?.user_id, productId, "increment").then((data) => {
       //getAllCartItems(user?.user_id).then((items) => {
        // dispatch(setCartItems(items));
@@ -158,7 +163,7 @@ export const CartItemCard = ({ index, data }) => {
           </span>
         </p>
         <p className="text-sm flex items-center justify-center gap-1 font-semibold text-green-400 ml-auto">
-          <HiCurrencyRupee className="text-green-400" /> {itemTotal}
+            {"R"} {itemTotal}
         </p>
       </div>
 
@@ -168,7 +173,7 @@ export const CartItemCard = ({ index, data }) => {
           onClick={() => decrementCart(data?.id)}
           className="w-8 h-8 flex items-center justify-center rounded-md drop-shadow-md bg-zinc-900 cursor-pointer"
         >
-          <p className="text-xl font-semibold text-primary">--</p>
+          <p className="text-xl font-semibold text-primary">-</p>
         </motion.div>
         <p className="text-lg text-primary font-semibold">{data?.quantity}</p>
         <motion.div

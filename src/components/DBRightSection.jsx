@@ -8,11 +8,16 @@ import {
   DBOrders,
   DBUsers,
 } from "../components";
+import { homeimg } from "../assets";
+
+
 
 const DBRightSection = () => {
   return (
     <div className="flex flex-col py-12 px-12 flex-1 h-full">
       <DBHeader />
+   
+      
       <div className="flex flex-col flex-1 overflow-y-scroll scrollbar-none ">
         <Routes>
           <Route path="/home" element={<DBHome />} />
