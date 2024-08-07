@@ -29,7 +29,9 @@ const SliderCard = ({ data, index }) => {
   return (
 
     <div className="bg-lightOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-between relative px-4 py-2 w-full md:w-340 md:min-w-350 gap-3">
-      <img src={data.image} className="w-40 h-40 object-contain" alt="" />
+       {imageUrls.map((url, index) => (
+          <img src={url} alt={`Image ${index}`} key={index} className="w-32 h-32 object-cover" />
+        ))}
       <div className="relative pt-12">
         <p className="text-xl text-headingColor font-semibold">
           {data.name}

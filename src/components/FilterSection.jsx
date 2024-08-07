@@ -11,7 +11,8 @@ import axios from "axios";
 const FilterSection = () => {
   const [category, setCategory] = useState("salads");
   const [products, setProducts] = useState([]);
- 
+  const [imageUrls, setImageUrls] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       console.log(category)
@@ -22,9 +23,12 @@ const FilterSection = () => {
         console.log("Data from API:", category);
         setProducts(productsData);
        
-        // Assuming you have an endpoint to fetch image URLs
+      // Assuming you have an endpoint to fetch image URLs
       const imageResponse = await axios.get(`http://localhost:8089/api/v1/admin/names/2`);
+      const imageNames = imageResponse.data; 
 
+      const urls = imageNames.map(name => `http://localhost:8089/images/foodImages/${name}`);
+        setImageUrls(urls);
 
       } catch (error) {
         console.log("Error fetching data:", error);
