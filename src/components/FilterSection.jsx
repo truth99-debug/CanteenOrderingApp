@@ -27,7 +27,7 @@ const FilterSection = () => {
       const imageResponse = await axios.get(`http://localhost:8089/api/v1/admin/names/2`);
       const imageNames = imageResponse.data; 
 
-      const urls = imageNames.map(name => `http://localhost:8089/images/foodImages/${name}`);
+      const urls = imageNames.map(name => `http://localhost:8089/images/foodImages/wrapss.jpg`);
         setImageUrls(urls);
 
       } catch (error) {
